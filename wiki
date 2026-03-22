@@ -1,0 +1,94 @@
+# 🏃‍♂️ Parkour Plugin - Official Wiki
+
+Welcome to the official Wiki for the Parkour plugin. This plugin is designed to provide the best modern parkour experience for Minecraft servers (Paper/Spigot 1.21.x), combining a dynamic ranking system, animated holograms, and 100% integrated interactive menus.
+
+---
+
+## ✨ Key Features
+
+*   **🏆 Dynamic Rank System (Grading):** Automatically awards ranks (SS, S, A, B, C, D) based on the time difference compared to the parkour's World Record (#1).
+*   **🖥️ 100% GUI Management:** Create, edit, rename, and delete parkours, or manage rewards without having to remember a single command. Everything is visual and intuitive.
+*   **✨ Holograms & Animations:** Floating holograms for live timers (above the player's head), global leaderboards, and full support for dynamic animations (like `%animation:rainbow-name%`).
+*   **🛡️ Anti-Cheat Restrictions:** Prevents cheating by blocking creative flight, combat (PvP/PvE), block breaking, ender pearls, and inventory access while players are in an active parkour session.
+*   **🎁 Smart Rewards:** Configure console commands, player commands, and personalized custom messages. Rewards are automatically executed when a player beats their Personal Best.
+*   **🗺️ Exploration Mode:** Gamify your server by hiding parkours as "???" in the main menu until the player finds them in the world and steps on their start plate.
+*   **🌐 Multi-Language:** Full support for English and Spanish (`messages_en.yml` / `messages_es.yml`), plus native extended support for MiniMessage formatting.
+
+---
+
+## 🛠️ Quick Setup Guide
+
+### Creating Your First Parkour
+1. Type `/pka` to open the **Admin Menu**.
+2. Click the **Emerald (+ Create Parkour)** located at the bottom.
+3. The menu will close. Type the **public name** for your new parkour in the chat.
+4. You will automatically enter **Setup Mode**, and your inventory will temporarily change.
+5. Physically place the provided plates in the world:
+   * **Gold Plate (Start):** Where players begin the parkour.
+   * **Iron Plate(s) (Checkpoint):** Along the path to divide the map into segments.
+   * **Diamond Plate (Finish):** Where the parkour ends.
+6. Once the route is ready, click the green **Save & Exit** item in your inventory.
+
+### Placing a Top Hologram (Leaderboard)
+1. Type `/pka` and click the **Nether Star (Leaderboard Holograms)**.
+2. Click the **Emerald (+ Create Leaderboard)** and select your parkour.
+3. You will receive a Gold Block. Place it exactly where you want the hologram to float.
+4. Type the **number of lines** you want for the leaderboard in the chat (e.g., `10`).
+5. Confirm by clicking the emerald. The block will disappear, and your ranking will come to life instantly.
+
+---
+
+## ⚙️ Configuration Details
+
+The `config.yml` file allows you to customize rank thresholds, sounds, and messages.
+
+### 🎖️ Rank System (Grading)
+Compares the player's time against the **Top 1 of the Parkour (World Record)**.
+```yaml
+rank-system:
+  enabled: true
+  thresholds: # MS difference against the Top 1
+    S: 5000     # Top 1 + 5.0 seconds
+    A: 15000    # Top 1 + 15.0 seconds
+    B: 30000    # Top 1 + 30.0 seconds
+    C: 60000    # Top 1 + 60.0 seconds
+```
+> **Note:** If a player achieves the absolute record (Historical Best Time), they will always be awarded the **SS** rank.
+
+### 🎁 Reward System
+Rewards are managed by navigating to `/pka` -> **Right Click** on a parkour -> **Rewards**. They support 3 different prefixes:
+
+| Prefix      | Behavior (Examples) |
+| :---        |    :----   |
+| `[console]` | The default prefix. Silently executes a command from the console. <br>Ex: `[console] eco give {player} 500`|
+| `[player]`  | Forces the winning player to execute a command as themselves.<br>Ex: `[player] me is a parkour legend.` |
+| `[message]` | Sends a private text/message using MiniMessage directly.<br>Ex: `[message] <green>You won 5 exclusive keys!` |
+
+*(Available variables: `{player}`, plus native support for all `PlaceholderAPI` tags)*
+
+---
+
+## 📜 Commands & Permissions
+
+### General Players
+* **`/pk`** — Opens the public parkour list to check progress and play.
+* **`/pk quit`** — Forces an exit from the current parkour session and restores your freedom.
+* *(No extra permissions required; enabled by default).*
+
+### Administrators (`parkour.admin`)
+* **`/pka`** — Opens the general Control Panel to oversee and configure everything.
+* **`/pka reload`** — Instantly reloads `config.yml` and translation files without restarting the server.
+* **`parkour.bypass`** — Allows Admins/Builders to teleport, fly, and break blocks within the area of an active parkour without terminating their session.
+
+---
+
+## 💡 Frequently Asked Questions (FAQ)
+
+**Q: Why don't I receive rewards when I finish the parkour while testing the plugin?**
+**A:** By design, rewards are only given the **first time** you beat your own `Personal Best`. Once you finish, your time is saved in the database. To test rewards again, open `/pka edit`, right-click the parkour, click the TNT block (Reset Leaderboard) to wipe your record, and run the parkour again.
+
+**Q: How do I modify the inventory given to a player while jumping?**
+**A:** Go to `config.yml` -> `session-items` section. There you can define the *Slot* and *Material* for the Quick Restart (Back to start), Checkpoint, and Quit items.
+
+**Q: If I fall off the map into the void, it takes too long to restart. How do I prevent this?**
+**A:** The plugin features smart void teleportation. In `config.yml` under `void.extra-buffer`, you can adjust how quickly it detects a player falling below the world border (min-height) to seamlessly return them to their last checkpoint before they take physical damage.
